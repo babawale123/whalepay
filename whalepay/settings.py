@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d2)=8#$o07my22^qu6_p+=^)5jo_!mf#d)&&rrq1(6^p%6$f+t'
+#SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = "django-insecure-d2)=8#$o07my22^qu6_p+=^)5jo_!mf#d)&&rrq1(6^p%6$f+t"
+
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'note',
+    'payment',
+    "corsheaders",
     'rest_framework',
     'rest_framework.authtoken',
 ]
@@ -46,6 +52,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -127,3 +134,13 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'api.User'
+
+FLUTTERWAVE_PAYMENT_VERIFICATION_URL = "https://api.flutterwave.com/v3/transactions/{}/verify"
+FLUTTERWAVE_SECRET_KEY = 'FLWSECK_TEST-a90d7a352c445577ec70234a14453305-X'
+
+
+CORS_ALLOWED_ORIGINS = [
+    
+    "http://127.0.0.1:5173",
+   
+]
