@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-d2)=8#$o07my22^qu6_p+=^)5jo_!mf#d)&&rrq1(6^p%6$f+t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1:8000','whalepay-195cb7c7db9d.herokuapp.com']
 
 
 # Application definition
