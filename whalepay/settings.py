@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = os.getenv("SECRET_KEY")
-SECRET_KEY = "django-insecure-d2)=8#$o07my22^qu6_p+=^)5jo_!mf#d)&&rrq1(6^p%6$f+t"
+#SECRET_KEY = "django-insecure-d2)=8#$o07my22^qu6_p+=^)5jo_!mf#d)&&rrq1(6^p%6$f+t"
+SECRET_KEY = config('SECRET_KEY')
 
 
 
@@ -139,8 +141,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'api.User'
 
+# FLUTTERWAVE_SECRET_KEY = 'FLWSECK_TEST-a90d7a352c445577ec70234a14453305-X'
 FLUTTERWAVE_PAYMENT_VERIFICATION_URL = "https://api.flutterwave.com/v3/transactions/{}/verify"
-FLUTTERWAVE_SECRET_KEY = 'FLWSECK_TEST-a90d7a352c445577ec70234a14453305-X'
+FLUTTERWAVE_SECRET_KEY = config('FLUTTERWAVE_SECRET_KEY')
+
 
 
 CORS_ALLOWED_ORIGINS = [
