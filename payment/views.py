@@ -19,6 +19,8 @@ class Purchases(APIView):
 
 
 class PurchaseVerificationAPIView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
     def post(self, request):
         data = PaymentVerificationSerializer(data=request.data)
         if data.is_valid():
