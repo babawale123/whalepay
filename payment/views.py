@@ -5,8 +5,12 @@ from rest_framework.response import Response
 from .models import Purchase  # Import your Purchase model
 from .serializer import PurchaseSerializer, PaymentVerificationSerializer
 from django.conf import settings
+from rest_framework.decorators import authentication_classes,permission_classes
+from rest_framework import permissions,authentication
 
 class Purchases(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
     def get(self, request):
         # Make sure you import Purchase model and serializer correctly
         purchases = Purchase.objects.filter(user=request.user)
