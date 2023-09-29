@@ -10,17 +10,11 @@ from payment.models import Purchase
 from .serializer import PaymentVerificationSerializer, PurchaseSerializer
 
 
-
-
-
-
-
-
 class Purchases(APIView):
     def get(self, request):
         purchases = Purchase.objects.filter(user=request.user)
-        data = PurchaseSerializer(purchases, many=True).data
-        return Response(data={'data': data})
+        data = PurchaseSerializer(purchases, many=True) 
+        return Response(data.data)
 
 
 class PurchaseVerificationAPIView(APIView):
@@ -52,7 +46,7 @@ class PurchaseVerificationAPIView(APIView):
                         amount=Decimal(amount)
                     )
                     
-                    return Response({'data': {'message': f'Purchase Successful!. You have topped up your meter with {new_purchase} litres of water'}})
+                    return Response(new_purchase)
                 return Response("Invalid transaction")
             return Response("Sorry. There was an issue with your payment.")
         return Response(data.errors)
