@@ -1,20 +1,17 @@
 from decimal import Decimal
-
 import requests
-from django.conf import settings
-from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from payment.models import Purchase
-
-from .serializer import PaymentVerificationSerializer, PurchaseSerializer
-
+from rest_framework.response import Response
+from .models import Purchase  # Import your Purchase model
+from .serializer import PurchaseSerializer, PaymentVerificationSerializer
+from django.conf import settings
 
 class Purchases(APIView):
     def get(self, request):
+        # Make sure you import Purchase model and serializer correctly
         purchases = Purchase.objects.filter(user=request.user)
-        data = PurchaseSerializer(purchases, many=True) 
-        return Response(data.data)
+        data = PurchaseSerializer(purchases, many=True).data
+        return Response(data)
 
 
 class PurchaseVerificationAPIView(APIView):
@@ -31,22 +28,26 @@ class PurchaseVerificationAPIView(APIView):
                 'Authorization': f'Bearer {settings.FLUTTERWAVE_SECRET_KEY}'
             })
             data = verify_response.json()
-            if(data['status'] == 'success'):
-                transaction_data = data['data']
-                tx_ref = transaction_data['tx_ref']
-                tx_id = transaction_data['id']
-                tx_amount = transaction_data['amount']
-                if (float(amount) == float(tx_amount) and tx_ref == transaction_reference and tx_id == transaction_id):
-
-                    return Response({"payment in progress"})
+            if data.get('status') == 'success':  # Use get() to safely access dictionary keys
+                transaction_data = data.get('data')
+                tx_ref = transaction_data.get('tx_ref')
+                tx_id = transaction_data.get('id')
+                tx_amount = transaction_data.get('amount')
+                if (
+                    float(amount) == float(tx_amount) and
+                    tx_ref == transaction_reference and
+                    tx_id == transaction_id
+                ):
+                    # Create a new purchase object
                     new_purchase = Purchase.objects.create(
                         user=request.user,
                         reference=tx_ref,
                         note=f'You purchased litres of water',
                         amount=Decimal(amount)
                     )
-                    
-                    return Response(new_purchase)
-                return Response("Invalid transaction")
-            return Response("Sorry. There was an issue with your payment.")
+                    # Return the serialized purchase data
+                    serialized_purchase = PurchaseSerializer(new_purchase).data
+                    return Response({"message": "Payment in progress", "purchase": serialized_purchase})
+                return Response({"message": "Invalid transaction"})
+            return Response({"message": "Sorry. There was an issue with your payment."})
         return Response(data.errors)
