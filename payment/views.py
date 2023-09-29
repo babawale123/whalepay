@@ -45,16 +45,14 @@ class PurchaseVerificationAPIView(APIView):
                 if (float(amount) == float(tx_amount) and tx_ref == transaction_reference and tx_id == transaction_id):
 
                     return Response({"payment in progress"})
-                   
                     new_purchase = Purchase.objects.create(
                         user=request.user,
                         reference=tx_ref,
-                        note=f'You purchased {purchased_water_volume} litres of water',
+                        note=f'You purchased litres of water',
                         amount=Decimal(amount)
                     )
-                    request.user.water_balance += purchased_water_volume
-                    request.user.save()
-                    return Response({'data': {'message': f'Purchase Successful!. You have topped up your meter with {purchased_water_volume} litres of water'}})
+                    
+                    return Response({'data': {'message': f'Purchase Successful!. You have topped up your meter with {new_purchase} litres of water'}})
                 return Response("Invalid transaction")
             return Response("Sorry. There was an issue with your payment.")
         return Response(data.errors)

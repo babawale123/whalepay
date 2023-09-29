@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import PurchaseVerificationAPIView
+from .views import PurchaseVerificationAPIView,Purchases
 
 
 urlpatterns = [
-    path('',PurchaseVerificationAPIView.as_view())
+    path('',PurchaseVerificationAPIView.as_view()),
+    path('payments/',Purchases.as_view())
 ]
